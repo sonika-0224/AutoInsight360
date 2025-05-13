@@ -1,0 +1,66 @@
+{% extends 'dashboard/base.html' %} {% block content %}
+<h2>Auto Insights ✨</h2>
+
+{% if error %}
+<p>{{ error }}</p>
+<a href="{% url 'upload_dataset' %}">
+  <button>📁 Upload Dataset</button>
+</a>
+{% else %}
+<ul>
+  <li>
+    <b>Top 5 Brands:</b>
+    <div style="width: 400px">
+      {% for brand, data in insights.top_brands.items %}
+      <div style="margin-bottom: 12px">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+          "
+        >
+          <span
+            ><b
+              ><a href="{% url 'brand_details' brand=brand %}"
+                >{{ brand }}</a
+              ></b
+            ></span
+          >
+          <span>{{ data.count }} cars</span>
+          <!-- ✅ Shows count properly -->
+        </div>
+        <div
+          style="
+            background-color: #eee;
+            height: 12px;
+            border-radius: 20px;
+            overflow: hidden;
+          "
+        >
+          <div
+            style="height: 100%;
+            width: {{ data.width }}%;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            border-radius: 20px;
+            transition: all 0.5s ease;"
+            onmouseover="this.style.boxShadow='0 0 12px #00c6ff'"
+            onmouseout="this.style.boxShadow='none'"
+          ></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </li>
+
+  <li><b>Average Car Price:</b> ${{ insights.average_price }}</li>
+
+  <li>
+    <b>Most Popular Vehicle Size:</b> {{ insights.most_popular_vehicle_size }}
+  </li>
+</ul>
+
+<a href="{% url 'analyst_dashboard' %}">
+  <button>⬅️ Back to Analyst Dashboard</button>
+</a>
+{% endif %} {% endblock %}

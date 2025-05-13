@@ -1,0 +1,43 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+
+<h2>Auto-Generated Insights 📊</h2>
+
+{% if error %}
+<p style="color: red">{{ error }}</p>
+{% else %}
+
+<h3>Top 5 Brands:</h3>
+<ul>
+  {% for brand, count in insights.top_brands.items %}
+    <li><b>{{ brand }}</b>: {{ count }} cars</li>
+  {% endfor %}
+</ul>
+
+<h3>Average Price Per Cluster:</h3>
+<ul>
+  {% for cluster, avg_price in insights.avg_price_per_cluster.items %}
+    <li>Cluster {{ cluster }}: ${{ avg_price }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Cluster Sizes:</h3>
+<ul>
+  {% for cluster, size in insights.cluster_sizes.items %}
+    <li>Cluster {{ cluster }}: {{ size }} cars</li>
+  {% endfor %}
+</ul>
+
+{% if insights.top_vehicle_type %}
+<h3>Top Vehicle Size:</h3>
+<p>{{ insights.top_vehicle_type }}</p>
+{% endif %}
+
+{% endif %}  {# <-- Only ONE closing {% endif %} here! #}
+
+<br />
+<a href="{% url 'analyst_dashboard' %}">
+  <button>⬅️ Back to Analyst Dashboard</button>
+</a>
+
+{% endblock %}

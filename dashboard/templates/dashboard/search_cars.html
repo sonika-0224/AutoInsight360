@@ -1,0 +1,188 @@
+{% extends 'dashboard/base.html' %} {% block content %}
+<div class="bg-gray-100 dark:bg-gray-900 min-h-screen px-4 py-12">
+  <div class="max-w-4xl mx-auto">
+    <h2
+      class="text-3xl font-extrabold text-center text-blue-700 dark:text-blue-300 mb-10"
+    >
+      Find Your Perfect Car 🚗
+    </h2>
+
+    <!-- Filter Form -->
+    <form
+      method="post"
+      class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg"
+    >
+      {% csrf_token %}
+      <div class="grid grid-cols-1 gap-y-6">
+        {% comment %} Price Range {% endcomment %}
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300"
+            >Minimum Price</label
+          >
+          <input
+            type="number"
+            name="min_price"
+            required
+            class="flex-1 input-field"
+          />
+        </div>
+
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300"
+            >Maximum Price</label
+          >
+          <input
+            type="number"
+            name="max_price"
+            required
+            class="flex-1 input-field"
+          />
+        </div>
+
+        {% comment %} Brand {% endcomment %}
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300">Brand</label>
+          <select name="brand" required class="flex-1 input-field">
+            {% for brand in choices.brands %}
+            <option value="{{ brand|upper }}">{{ brand|upper }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {% comment %} Fuel Type {% endcomment %}
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300">Fuel Type</label>
+          <select name="fuel_type" required class="flex-1 input-field">
+            <option value="PETROL">PETROL</option>
+            <option value="DIESEL">DIESEL</option>
+            <option value="ELECTRIC">ELECTRIC</option>
+          </select>
+        </div>
+
+        {% comment %} Transmission {% endcomment %}
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300"
+            >Transmission</label
+          >
+          <select name="transmission" required class="flex-1 input-field">
+            {% for trans in choices.transmissions %}
+            <option value="{{ trans|upper }}">{{ trans|upper }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {% comment %} Body Type {% endcomment %}
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300">Body Type</label>
+          <select name="body_type" required class="flex-1 input-field">
+            {% for body in choices.body_types %}
+            <option value="{{ body|upper }}">{{ body|upper }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {% comment %} Year Range {% endcomment %}
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300"
+            >Minimum Year</label
+          >
+          <input
+            type="number"
+            name="min_year"
+            value="2010"
+            required
+            class="flex-1 input-field"
+          />
+        </div>
+
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300"
+            >Maximum Year</label
+          >
+          <input
+            type="number"
+            name="max_year"
+            value="2024"
+            required
+            class="flex-1 input-field"
+          />
+        </div>
+
+        {% comment %} Scenario Analysis {% endcomment %}
+        <div class="flex justify-between items-center gap-4">
+          <label class="w-40 text-gray-700 dark:text-gray-300"
+            >Scenario Analysis</label
+          >
+          <select name="scenario" class="flex-1 input-field">
+            <option value="">None</option>
+            <option value="economy_downturn">Economy Downturn 📉</option>
+            <option value="ev_rise">Electric Vehicle Rise 🔋</option>
+            <option value="gas_price_surge">Gas Price Surge ⛽</option>
+          </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-between items-center pt-6">
+          <a
+            href="{% url 'customer_dashboard' %}"
+            class="text-sm text-gray-600 dark:text-gray-300 hover:underline"
+          >
+            ⬅ Back
+          </a>
+          <button
+            type="submit"
+            class="px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow transition"
+          >
+            🔍 Get Recommendations
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Results -->
+    {% if recommended_cars %}
+    <div class="mt-12">
+      <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-6">
+        🎯 Recommended Cars:
+      </h2>
+      <ul class="space-y-4">
+        {% for car in recommended_cars %}
+        <li
+          class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700"
+        >
+          <div class="text-blue-700 dark:text-blue-300 font-semibold text-lg">
+            {{ car.Brand }} {{ car.Model }} - ${{ car.Price }} ({{ car.Year }})
+          </div>
+          <div class="text-sm text-gray-700 dark:text-gray-300 mt-1">
+            {{ car.Transmission_Type }} | {{ car.Vehicle_Size }}
+          </div>
+          <form method="post" action="{% url 'add_to_wishlist' %}" class="mt-2">
+            {% csrf_token %}
+            <input type="hidden" name="brand" value="{{ car.Brand }}" />
+            <input type="hidden" name="price" value="{{ car.Price }}" />
+            <input type="hidden" name="year" value="{{ car.Year }}" />
+            <button
+              type="submit"
+              class="text-pink-600 hover:text-pink-800 font-bold text-lg"
+            >
+              ❤️ Save to Wishlist
+            </button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% elif request.method == 'POST' %}
+    <p class="text-red-600 dark:text-red-400 mt-6 text-center">
+      No cars found matching your filters 😔
+    </p>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .input-field {
+    @apply w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white focus:outline-none focus:ring focus:border-blue-400;
+  }
+</style>
+{% endblock %}

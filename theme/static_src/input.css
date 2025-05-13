@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.form-input {
+  @apply w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white;
+}

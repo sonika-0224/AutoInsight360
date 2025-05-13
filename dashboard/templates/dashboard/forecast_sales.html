@@ -1,0 +1,57 @@
+{% extends 'dashboard/base.html' %} {% block content %}
+<h2>📈 Future Sales Prediction (Prophet)</h2>
+
+{% if error %}
+<p style="color: red">{{ error }}</p>
+{% else %} {% if forecast_data %}
+<canvas id="forecastChart" width="600" height="300"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const forecastData = {{ forecast_data|safe }};
+  const labels = forecastData.map(row => row.ds.split('T')[0]);
+  const values = forecastData.map(row => parseFloat(row.yhat).toFixed(2));
+
+  const ctx = document.getElementById('forecastChart').getContext('2d');
+  new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: labels,
+          datasets: [{
+              label: 'Predicted Total MSRP',
+              data: values,
+              borderColor: 'rgba(54, 162, 235, 1)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              fill: true,
+              tension: 0.4
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: false,
+                  title: {
+                    display: true,
+                    text: 'MSRP ($)'
+                  }
+              },
+              x: {
+                  title: {
+                    display: true,
+                    text: 'Year'
+                  }
+              }
+          }
+      }
+  });
+</script>
+{% else %}
+<p style="color: orange">No forecast data available.</p>
+{% endif %} {% endif %}
+
+<br />
+<a href="{% url 'analyst_dashboard' %}">
+  <button>⬅️ Back to Analyst Dashboard</button>
+</a>
+{% endblock %}

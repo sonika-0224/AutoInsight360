@@ -1,0 +1,52 @@
+{% extends 'dashboard/base.html' %} {% block content %}
+<div
+  class="min-h-screen flex justify-center items-start pt-16 bg-gray-100 dark:bg-gray-900 px-4"
+>
+  <div
+    class="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md"
+  >
+    <h2
+      class="text-2xl font-bold text-blue-600 dark:text-blue-300 mb-6 text-center"
+    >
+      📁 Upload Dataset
+    </h2>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+      {% csrf_token %}
+      <div>
+        <label
+          for="dataset"
+          class="block mb-1 text-gray-700 dark:text-gray-200"
+        >
+          Select CSV File:
+        </label>
+        <input
+          type="file"
+          name="dataset"
+          accept=".csv"
+          required
+          class="w-72 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
+        />
+      </div>
+
+      <div class="text-center">
+        <button
+          type="submit"
+          class="w-32 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition"
+        >
+          Upload
+        </button>
+      </div>
+    </form>
+
+    <div class="mt-6 text-center">
+      <a
+        href="{% url 'analyst_dashboard' %}"
+        class="inline-block bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition"
+      >
+        ⬅️ Back to Analyst Dashboard
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

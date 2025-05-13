@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="{% if request.session.theme == 'dark' %}dark{% endif %}">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AutoInsight360</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CSS -->
+    <link href="{% static 'css/output.css' %}" rel="stylesheet" />
+    <link href="{% static 'dashboard/custom.css' %}" rel="stylesheet" />
+  </head>
+
+  <body class="overflow-x-hidden bg-white text-gray-800 dark:bg-gray-900 dark:text-white min-h-screen transition-colors duration-300">
+
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-md py-4 px-6 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-300">AutoInsight360 🚗</h1>
+
+      <div class="flex items-center space-x-4">
+        <!-- Dark Mode Toggle Button -->
+        <button
+          onclick="toggleDarkMode()"
+          class="bg-gray-200 dark:bg-gray-700 text-sm text-black dark:text-white px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+        >
+          🌙 / ☀️
+        </button>
+
+        <!-- Logout -->
+        {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="text-sm text-blue-600 hover:underline focus:outline-none dark:text-blue-400"
+          >
+            Logout
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="max-w-xl mx-auto mt-6 px-4">
+      <ul class="space-y-3">
+        {% for message in messages %}
+        <li class="px-4 py-3 rounded shadow-md text-white
+          {% if message.tags == 'error' %} bg-red-500
+          {% elif message.tags == 'success' %} bg-green-500
+          {% elif message.tags == 'warning' %} bg-yellow-400 text-black
+          {% else %} bg-blue-500 {% endif %}">
+          {{ message }}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Toggle Script -->
+    <script>
+      function toggleDarkMode() {
+        const root = document.documentElement;
+        root.classList.toggle('dark');
+        localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+      }
+
+      // Apply saved theme on load
+      document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      });
+    </script>
+  </body>
+</html>

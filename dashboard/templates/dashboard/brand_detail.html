@@ -1,0 +1,54 @@
+{% extends 'dashboard/base.html' %} {% block content %}
+<h2>🚗 {{ brand }} Breakdown</h2>
+
+<ul>
+  <li><b>Average MSRP:</b> ${{ avg_price }}</li>
+
+  <li>
+    <b>Top Models:</b>
+    <ul>
+      {% for model, count in top_models.items %}
+      <li>{{ model }} — {{ count }} cars</li>
+      {% endfor %}
+    </ul>
+  </li>
+
+  <li>
+    <b>Sales Over Years:</b>
+    <canvas id="salesChart" width="600" height="300"></canvas>
+  </li>
+</ul>
+
+<a href="{% url 'generate_insights' %}">
+  <button>⬅️ Back to Insights</button>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const salesData = {{ sales_over_years|safe }};
+  const years = salesData.map(row => row.Year);
+  const msrp = salesData.map(row => row.MSRP);
+
+  const ctx = document.getElementById('salesChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [{
+        label: 'Total MSRP',
+        data: msrp,
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}
