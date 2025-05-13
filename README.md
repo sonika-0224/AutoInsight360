@@ -52,7 +52,7 @@ git clone https://github.com/sonika-0224/AutoInsight360.git
 cd AutoInsight360
 
 ----
-#Steps to run :
+Steps to run :
 Create and activate virtual environment
 
 bash
