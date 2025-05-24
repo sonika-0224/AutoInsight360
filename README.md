@@ -53,26 +53,31 @@ cd AutoInsight360
 
 ----
 ## Steps to run :
-Create and activate virtual environment
+To Create and activate virtual environment
 
 bash:
 
 python -m venv venv
 source venv/bin/activate    # macOS/Linux
+
 OR
+
 venv\Scripts\activate.bat   # Windows
-Install Python dependencies
+
+To Install Python dependencies
 
 bash:
 
 pip install -r requirements.txt
-Install Tailwind CSS dependencies
+
+To Install Tailwind CSS dependencies
 
 bash:
 
 npm install
 npm run build-css
-Run migrations and start server
+
+To Run migrations and start server
 
 bash:
 
