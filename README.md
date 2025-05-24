@@ -52,10 +52,10 @@ git clone https://github.com/sonika-0224/AutoInsight360.git
 cd AutoInsight360
 
 ----
-Steps to run :
+## Steps to run :
 Create and activate virtual environment
 
-bash
+bash:
 
 python -m venv venv
 source venv/bin/activate    # macOS/Linux
@@ -63,18 +63,18 @@ OR
 venv\Scripts\activate.bat   # Windows
 Install Python dependencies
 
-bash
+bash:
 
 pip install -r requirements.txt
 Install Tailwind CSS dependencies
 
-bash
+bash:
 
 npm install
 npm run build-css
 Run migrations and start server
 
-bash
+bash:
 
 python manage.py makemigrations
 python manage.py migrate
